@@ -17,8 +17,13 @@ COPY --from=gcsfuse-builder /usr/bin/gcsfuse /usr/bin/gcsfuse
 
 # Copia o script para o container
 COPY startup.sh /
+
+# Altera para o usuário root para executar o chmod
+USER root
 # Torna o script executável
 RUN chmod +x /startup.sh
+# Volta para o usuário padrão para segurança
+USER pgadmin
 
 EXPOSE 8080
 
