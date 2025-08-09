@@ -15,8 +15,13 @@ FROM dpage/pgadmin4:latest
 # Copia o binário gcsfuse para o PATH do sistema
 COPY --from=gcsfuse-builder /usr/bin/gcsfuse /usr/bin/gcsfuse
 
+# Copia o script para o container
+COPY startup.sh /
+# Torna o script executável
+RUN chmod +x /startup.sh
+
 EXPOSE 8080
 
 # Comando de inicialização
-# Usa o caminho absoluto para garantir que o gcsfuse seja encontrado
-CMD ["sh", "-c", "/usr/bin/gcsfuse --gid 5050 --uid 5050 pgadmin-j /var/lib/pgadmin && exec /entrypoint.sh"]
+# Usa o novo script como comando de inicialização
+CMD ["/startup.sh"]
