@@ -18,4 +18,5 @@ COPY --from=gcsfuse-builder /usr/bin/gcsfuse /usr/bin/gcsfuse
 EXPOSE 8080
 
 # Comando de inicialização
-CMD ["sh", "-c", "gcsfuse --gid 5050 --uid 5050 pgadmin-j /var/lib/pgadmin && exec /entrypoint.sh"]
+# Usa o caminho absoluto para garantir que o gcsfuse seja encontrado
+CMD ["sh", "-c", "/usr/bin/gcsfuse --gid 5050 --uid 5050 pgadmin-j /var/lib/pgadmin && exec /entrypoint.sh"]
