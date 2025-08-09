@@ -7,8 +7,8 @@ RUN sed -i 's/security.debian.org/archive.debian.org\/debian-security/g' /etc/ap
 
 # Adiciona o repositório do GCSFuse e instala os pacotes
 RUN apt-get update && apt-get install -y apt-transport-https gnupg curl
-RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt gcsfuse-buster main" | tee /etc/apt/sources.list.d/gcsfuse.list
 RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+RUN echo "deb http://packages.cloud.google.com/apt gcsfuse-buster main" | tee /etc/apt/sources.list.d/gcsfuse.list
 RUN apt-get update && apt-get install -y gcsfuse
 
 # Estágio final
