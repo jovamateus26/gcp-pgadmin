@@ -1,25 +1,15 @@
-# Estágio de build para instalar o gcsfuse
-FROM debian:buster as gcsfuse-builder
-
-USER root
-# Substitui os URLs de repositório para apontar para o arquivo
-RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list
-RUN sed -i 's/security.debian.org/archive.debian.org\/debian-security/g' /etc/apt/sources.list
-
-# Adiciona o repositório do GCSFuse e instala os pacotes
-RUN apt-get update && apt-get install -y apt-transport-https gnupg curl
-RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-RUN echo "deb http://packages.cloud.google.com/apt gcsfuse-buster main" | tee /etc/apt/sources.list.d/gcsfuse.list
-RUN apt-get update && apt-get install -y gcsfuse
-
-# Estágio final
+# Usa a imagem oficial do pgAdmin como base
 FROM dpage/pgadmin4:latest
 
-# Copia o binário gcsfuse do estágio de build
-COPY --from=gcsfuse-builder /usr/bin/gcsfuse /usr/bin/gcsfuse
+# Altera para o usuário root para fins de teste.
+# Isso irá resolver os problemas de permissão.
+USER root
 
-# Exponha a porta correta para o Cloud Run
+# Expõe a porta 8080, que é a porta que o Cloud Run usa.
+# O entrypoint do pgAdmin tentará usar a porta 80 por padrão,
+# mas a variável de ambiente PGADMIN_LISTEN_PORT a sobrescreverá.
 EXPOSE 8080
 
-# Comando de inicialização
-CMD ["sh", "-c", "gcsfuse pgadmin-j /var/lib/pgadmin && exec /entrypoint.sh"]
+# O CMD é o comando padrão da imagem, que executa o /entrypoint.sh.
+# Não há necessidade de alterá-lo.
+CMD ["/entrypoint.sh"]
