@@ -18,7 +18,7 @@ FROM dpage/pgadmin4:latest
 COPY --from=gcsfuse-builder /usr/bin/gcsfuse /usr/bin/gcsfuse
 
 # Exponha a porta correta para o Cloud Run
-EXPOSE 8080
+EXPOSE 80
 
 # Comando de inicialização
 CMD ["sh", "-c", "gcsfuse pgadmin-j /var/lib/pgadmin && exec /entrypoint.sh"]
